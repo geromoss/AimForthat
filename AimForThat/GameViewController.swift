@@ -61,10 +61,10 @@ class GameViewController: UIViewController {
             title = "Puntuacion Perfecta"
         case 1...5:
             title = "Casi perfecto"
-            points = Int(1.5 * Float(points))
+           // points = Int(1.5 * Float(points))
         case 6...12:
             title = "Te ha faltado poco"
-            points = Int(1.2 * Float(points))
+          //  points = Int(1.2 * Float(points))
         default:
             title = "has ido lejos"
         }
