@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import QuartzCore
 
 class GameViewController: UIViewController {
     
@@ -100,6 +101,8 @@ class GameViewController: UIViewController {
     @IBAction func startNewGame(_ sender: UIButton) {
         resetGame()
         updateLabel()
+        
+        
     }
     
     func setupSlider(){
@@ -137,9 +140,20 @@ class GameViewController: UIViewController {
     }
     
     func updateLabel(){
+        
+        //agrego animacion para la actualizacion de datos usando Quarts Core
+        let transition = CATransition()
+        transition.type = kCATransitionFade
+        transition.duration = 1
+        transition.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
+        //se lo agregamos a la vista principal
+        self.view.layer.add(transition, forKey: nil)
+        
         self.targetLabel.text = "\(self.targetValue)"
         self.scoreLabel.text = "\(self.score)"
         self.roundLabel.text = "\(self.round)"
+        
+        
     }
     
     
