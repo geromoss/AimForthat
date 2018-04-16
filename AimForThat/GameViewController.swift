@@ -15,6 +15,8 @@ class GameViewController: UIViewController {
     var targetValue  : Int = 0
     var score        : Int = 0
     var round        : Int = 0
+    var time         : Int = 0
+    var timer        : Timer?
     
     @IBOutlet weak var slider: UISlider!
     
@@ -23,6 +25,10 @@ class GameViewController: UIViewController {
     @IBOutlet weak var scoreLabel: UILabel!
     
     @IBOutlet weak var roundLabel: UILabel!
+    
+    @IBOutlet weak var timeLabel: UILabel!
+    
+    @IBOutlet weak var maxScoreLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -127,6 +133,18 @@ class GameViewController: UIViewController {
     func resetGame(){
         self.score = 0
         self.round = 0
+        self.time = 60
+        
+        let currentMaxScore = UserDefaults.standard.integer(forKey: "maxscore")
+        self.maxScoreLabel.text = "\(currentMaxScore)"
+        
+        if timer != nil{
+            timer?.invalidate()
+        }
+        
+        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(tick), userInfo: nil, repeats: true)
+    
+        self.updateLabel()
         self.startNewRound()
     }
     
@@ -152,8 +170,37 @@ class GameViewController: UIViewController {
         self.targetLabel.text = "\(self.targetValue)"
         self.scoreLabel.text = "\(self.score)"
         self.roundLabel.text = "\(self.round)"
+        self.timeLabel.text = "\(self.time)"
         
         
+    }
+    
+    @objc func tick(){
+        print("tick, tack")
+        self.time -= 1
+        self.timeLabel.text = "\(self.time)"
+        
+        if self.time <= 0{
+            
+            let maxscore = UserDefaults.standard.integer(forKey: "maxscore")
+            
+            if maxscore < self.score{
+                UserDefaults.standard.set(self.score, forKey: "maxscore")
+                
+            }
+            
+            //añadimos un alerta al usuario
+            let alert = UIAlertController(title: title, message: "La puntuación obtenida es  \(self.score), en \(self.round) rondas", preferredStyle: .alert)
+            
+            let action = UIAlertAction(title: "OK", style: .default, handler:{
+                action in
+                self.resetGame()
+            })
+            // Añadimos la Accion a nuestra alerta
+            alert.addAction(action)
+            present(alert, animated: true)
+            
+        }
     }
     
     
